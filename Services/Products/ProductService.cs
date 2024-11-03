@@ -40,6 +40,14 @@ namespace App.Services.Products
             var productAsDto = new ProductDto(product!.Id, product.Name, product.Price, product.Stock);
             return ServiceResult<ProductDto?>.Success(productAsDto!);
         }
+		public async Task<ServiceResult<List<ProductDto>>> GetPagedAllListAsync(int pageNumber, int pageSize)
+		{
+			var products = await productRepository.GetAll().Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+			var productsAsDto = products.Select(p => new ProductDto(p.Id, p.Name, p.Price, p.Stock)).ToList();
+
+			return ServiceResult<List<ProductDto>>.Success(productsAsDto);
+		}
         public async Task<ServiceResult<CreateProductResponse>> CreateAsync(CreateProductRequest request)
         {
             var product = new Product()
