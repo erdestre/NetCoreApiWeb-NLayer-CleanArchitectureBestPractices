@@ -81,8 +81,22 @@ namespace App.Services.Products
 
             return ServiceResult.Success(HttpStatusCode.NoContent);
         }
+		public async Task<ServiceResult> UpdateStockAsync(UpdateProductStockRequest request)
+		{
+			var product = await productRepository.GetByIdAsync(request.ProductId);
 
-        public async Task<ServiceResult> DeleteAsync(int id)
+			if (product is null)
+			{
+				return ServiceResult.Fail("Product not found", HttpStatusCode.NotFound);
+			}
+
+			product.Stock = request.Quantity;
+			productRepository.Update(product);
+			await unitOfWork.SaveChangesAsync();
+
+			return ServiceResult.Success(HttpStatusCode.NoContent);
+		}
+		public async Task<ServiceResult> DeleteAsync(int id)
         {
             var product = await productRepository.GetByIdAsync(id);
 
@@ -95,5 +109,5 @@ namespace App.Services.Products
             await unitOfWork.SaveChangesAsync();
             return ServiceResult.Success(HttpStatusCode.NoContent);
         }
-    }
+	}
 }

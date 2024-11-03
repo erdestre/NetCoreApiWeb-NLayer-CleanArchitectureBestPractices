@@ -15,6 +15,7 @@ namespace App.Services.Products
 
 		Task<ServiceResult<CreateProductResponse>> CreateAsync(CreateProductRequest request);
         Task<ServiceResult> UpdateAsync(int id, UpdateProductRequest request);
+		Task<ServiceResult> UpdateStockAsync(UpdateProductStockRequest request);
         Task<ServiceResult> DeleteAsync(int id);
     }
 }
