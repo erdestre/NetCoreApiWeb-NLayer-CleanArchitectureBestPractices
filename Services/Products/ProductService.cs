@@ -8,10 +8,13 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using FluentValidation;
+using App.Services.Products.Create;
+using App.Services.Products.Update;
 
 namespace App.Services.Products
 {
-    public class ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork) : IProductService
+    public class ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork, IValidator<CreateProductRequest> createProductRequestValidator) : IProductService
     {
         public async Task<ServiceResult<List<ProductDto>>> GetTopPriceProductsAsync(int count)
         {
@@ -50,6 +53,18 @@ namespace App.Services.Products
 		}
         public async Task<ServiceResult<CreateProductResponse>> CreateAsync(CreateProductRequest request)
         {
+            //2. way async manuel service business check 
+            var anyProduct = await productRepository.Where(x => x.Name == request.Name).AnyAsync();
+            if (anyProduct) return ServiceResult<CreateProductResponse>.Fail("Product already exist", HttpStatusCode.BadRequest);
+
+            //3.way async manuel validation business check
+            //var validationResultAsync= await createProductRequestValidator.ValidateAsync(request); // bunu kullanıyosa
+
+            //if (!validationResultAsync.IsValid)
+            //{
+            //    return ServiceResult<CreateProductResponse>.Fail(validationResultAsync.Errors.Select(x => x.ErrorMessage).ToList());
+            //}
+
             var product = new Product()
             {
                 Name = request.Name,

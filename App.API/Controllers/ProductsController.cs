@@ -1,10 +1,12 @@
 ﻿using App.Services.Products;
+using App.Services.Products.Create;
+using App.Services.Products.Update;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace App.API.Controllers
 {
-	[Route("api/[controller]")]
+    [Route("api/[controller]")]
 	[ApiController]
 	public class ProductsController(IProductService productService) : CustomBaseController
 	{

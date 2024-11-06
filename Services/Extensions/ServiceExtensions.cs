@@ -18,9 +18,9 @@ namespace App.Services.Extensions
 		{
 			services.AddScoped<IProductService, ProductService>();
 
-			services.AddFluentValidationAutoValidation();
+			services.AddFluentValidationAutoValidation();  // async yapacaksan otomatik eklenmiyor elle eklemen gerekiyor ve burayı implement etmemek gerekiyor.
 
-			services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 			return services;
 		}
