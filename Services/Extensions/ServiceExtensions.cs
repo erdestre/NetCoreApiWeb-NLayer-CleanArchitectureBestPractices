@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using App.Services.ExceptionHandlers;
 
 namespace App.Services.Extensions
 {
@@ -23,6 +24,9 @@ namespace App.Services.Extensions
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 			services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+			services.AddExceptionHandler<CriticalExceptionHandler>();
+			services.AddExceptionHandler<GlobalExceptionHandler>();
 
             return services;
 		}
