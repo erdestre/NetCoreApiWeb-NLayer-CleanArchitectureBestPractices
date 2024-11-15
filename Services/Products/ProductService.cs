@@ -71,13 +71,8 @@ namespace App.Services.Products
             //    return ServiceResult<CreateProductResponse>.Fail(validationResultAsync.Errors.Select(x => x.ErrorMessage).ToList());
             //}
 
-            var product = new Product()
-            {
-                Name = request.Name,
-                Price = request.Price,
-                Stock = request.Stock,
-            };
-            
+            var product = mapper.Map<Product>(request);
+
             await productRepository.AddAsync(product);
             await unitOfWork.SaveChangesAsync();
 
@@ -96,9 +91,8 @@ namespace App.Services.Products
             var isProductNameExist = await productRepository.Where(x => x.Name == request.Name && x.Id != product.Id).AnyAsync();
             if (isProductNameExist) return ServiceResult.Fail("Product already exist", HttpStatusCode.BadRequest);
 
-            product.Name = request.Name;
-            product.Price = request.Price;
-            product.Stock = request.Stock;
+            
+            product = mapper.Map(request, product);
 
             productRepository.Update(product);
             await unitOfWork.SaveChangesAsync();
