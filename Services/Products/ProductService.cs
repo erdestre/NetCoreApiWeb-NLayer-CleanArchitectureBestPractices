@@ -93,6 +93,9 @@ namespace App.Services.Products
             {
                 return ServiceResult.Fail("Product not found", HttpStatusCode.NotFound);
             }
+            var isProductNameExist = await productRepository.Where(x => x.Name == request.Name && x.Id != product.Id).AnyAsync();
+            if (isProductNameExist) return ServiceResult.Fail("Product already exist", HttpStatusCode.BadRequest);
+
             product.Name = request.Name;
             product.Price = request.Price;
             product.Stock = request.Stock;
