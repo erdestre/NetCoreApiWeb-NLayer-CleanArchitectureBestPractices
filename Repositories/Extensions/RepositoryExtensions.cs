@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using App.Repositories.Categories;
+using App.Repositories.Interceptors;
 
 namespace App.Repositories.Extensions
 {
@@ -22,6 +23,7 @@ namespace App.Repositories.Extensions
                 {
                     sqlServerOptionsAction.MigrationsAssembly(typeof(RepositoryAssembly).Assembly.FullName);
                 });
+				options.AddInterceptors(new AuditDbContextInterceptor());
             });
 
 			services.AddScoped<IProductRepository, ProductRepository>();
