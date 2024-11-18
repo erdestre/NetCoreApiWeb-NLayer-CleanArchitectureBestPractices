@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using App.Services.Categories;
 using App.Services.ExceptionHandlers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace App.Services.Extensions
 {
@@ -18,6 +19,7 @@ namespace App.Services.Extensions
 	{
 		public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
 		{
+			services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
 			services.AddScoped<IProductService, ProductService>();
 			services.AddScoped<ICategoryService, CategoryService>();
 
