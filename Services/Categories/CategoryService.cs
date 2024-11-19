@@ -62,11 +62,7 @@ namespace App.Services.Categories
 		}
 		public async Task<ServiceResult> UpdateAsync(int id, UpdateCategoryRequest request)
 		{
-			var category = await categoryRepository.GetByIdAsync(id);
-			if (category == null)
-			{
-				return ServiceResult.Fail("Category not found", HttpStatusCode.NotFound);
-			}
+			
 
 			var isCategoryNameExist = await categoryRepository.Where(x => x.Name == request.Name && x.Id != id).AnyAsync();
 
@@ -75,7 +71,8 @@ namespace App.Services.Categories
 				return ServiceResult.Fail("Category already exists", HttpStatusCode.NotFound);
 			}
 
-			category = mapper.Map(request, category);
+			var category = mapper.Map<Category>(request);
+			category.Id = id;
 
 			categoryRepository.Update(category);
 			await unitOfWork.SaveChangesAsync();
@@ -86,12 +83,7 @@ namespace App.Services.Categories
 		{
 			var category = await categoryRepository.GetByIdAsync(id);
 
-			if(category == null)
-			{
-				return ServiceResult.Fail("Category not found", HttpStatusCode.NotFound);
-			}
-
-			categoryRepository.Delete(category);
+			categoryRepository.Delete(category!);
 			await unitOfWork.SaveChangesAsync();
 
 			return ServiceResult.Success(HttpStatusCode.NoContent);

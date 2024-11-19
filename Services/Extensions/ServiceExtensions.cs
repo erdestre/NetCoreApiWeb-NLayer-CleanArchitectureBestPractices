@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using App.Services.Categories;
 using App.Services.ExceptionHandlers;
+using App.Services.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.Services.Extensions
@@ -22,6 +23,7 @@ namespace App.Services.Extensions
 			services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
 			services.AddScoped<IProductService, ProductService>();
 			services.AddScoped<ICategoryService, CategoryService>();
+			services.AddScoped(typeof(NotFoundFilter<,>));
 
 			services.AddFluentValidationAutoValidation();  // async yapacaksan otomatik eklenmiyor elle eklemen gerekiyor ve burayı implement etmemek gerekiyor.
 

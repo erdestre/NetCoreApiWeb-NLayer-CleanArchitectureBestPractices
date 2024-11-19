@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace App.Repositories.Products
 {
-	internal class ProductRepository(AppDbContext context) : GenericRepository<Product>(context), IProductRepository
+	public class ProductRepository(AppDbContext context) : GenericRepository<Product, int>(context), IProductRepository
 	{
 		public Task<List<Product>> GetTopSellingProductsAsync(int count) => Context.Products.OrderByDescending(x => x.Price).Take(count).ToListAsync();
 	}
