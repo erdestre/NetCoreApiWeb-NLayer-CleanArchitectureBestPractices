@@ -22,7 +22,7 @@ namespace App.Services.Filters
 				return;
 			}
 
-w			if (await genericRepository.AnyAsync(id))
+			if (await genericRepository.AnyAsync(id))
 			{
 				await next();
 			}
