@@ -1,0 +1,6 @@
+@CApp.API_HostAddress = http://localhost:5281
+
+GET {{CApp.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
