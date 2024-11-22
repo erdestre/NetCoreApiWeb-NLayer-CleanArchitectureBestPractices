@@ -14,6 +14,8 @@
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+
+            return app;
         }
     }
 }
