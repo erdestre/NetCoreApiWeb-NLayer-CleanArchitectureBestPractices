@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using App.Application.Contracts.Caching;
 using App.Application.Contracts.Persistence;
 using App.Application.Features.Products.Create;
 using App.Application.Features.Products.Dto;
@@ -10,8 +11,9 @@ using FluentValidation;
 
 namespace App.Application.Features.Products;
 
-public class ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork, IValidator<CreateProductRequest> createProductRequestValidator, IMapper mapper) : IProductService
+public class ProductService(IProductRepository productRepository, IUnitOfWork unitOfWork, IValidator<CreateProductRequest> createProductRequestValidator, IMapper mapper, ICacheService cacheService) : IProductService
 {
+    private const string ProductListCacheKey = "ProductListCacheKey";
     public async Task<ServiceResult<List<ProductDto>>> GetTopPriceProductsAsync(int count)
     {
         var products = await productRepository.GetTopSellingProductsAsync(count);
@@ -26,9 +28,21 @@ public class ProductService(IProductRepository productRepository, IUnitOfWork un
     }
     public async Task<ServiceResult<List<ProductDto>>> GetAllListAsync()
     {
+        // cache aside design pattern
+        // 1. cache
+        // 2. fromdb
+        // 3. caching data
+
+        //decorator design pattern / proxy design pattern
+
+        var productListAsCached = await cacheService.GetAsync< List<ProductDto>> (ProductListCacheKey);
+        if (productListAsCached is not null) return ServiceResult<List<ProductDto>>.Success(productListAsCached);
+        
         var products = await productRepository.GetAllAsync();
         var productAsDto = mapper.Map<List<ProductDto>>(products);
         //var productsAsDto = products.Select(p => new ProductDto(p.Id, p.Name, p.Price, p.Stock)).ToList();
+
+        await cacheService.AddAsync(ProductListCacheKey, productAsDto, TimeSpan.FromMinutes(1));
         return ServiceResult<List<ProductDto>>.Success(productAsDto);
     }
     public async Task<ServiceResult<ProductDto?>> GetByIdAsync(int id)

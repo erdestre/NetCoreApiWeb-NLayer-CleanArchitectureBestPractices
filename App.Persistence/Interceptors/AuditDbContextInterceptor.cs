@@ -28,7 +28,7 @@ namespace App.Persistence.Interceptors
 			{
 				if (entityEntry.Entity is not IAuditEntity auditEntity) continue;
 
-				if(entityEntry.Entity is (EntityState.Added or EntityState.Modified)) continue;
+				if(entityEntry.Entity is not (EntityState.Added or EntityState.Modified)) continue;
 
 				Behaviours[entityEntry.State](eventData.Context, auditEntity);
 
